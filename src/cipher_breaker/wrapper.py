@@ -1,4 +1,5 @@
 import numpy as np
+import concurrent.futures
 from .cipher_breakers import CipherBreaker
 
 class CipherBreakerWrapper:
@@ -27,6 +28,40 @@ class CipherBreakerWrapper:
     def set_transition_matrix(self, TM_ref: np.ndarray):
         self.TM_ref = TM_ref
         return self
+
+    def execute(self, threads: int = 10, is_show_plot: bool = False) -> tuple[str, str, float]:
+        """Execute the Metropolis-Hastings algorithm with the provided parameters.
+
+        Args:
+            is_show_plot (bool): A flag indicating whether to display the plausibility plot.
+
+        Returns:
+            tuple[str, str, float]: A tuple containing the best key found, the decrypted text, and the plausibility score.
+        """
+        if self.text is None or self.TM_ref is None:
+            raise ValueError("Text and transition matrix must be set before execution.")
+
+        divided_iterations = self.iterations // threads
+        futures = []
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=threads) as executor:
+            for _ in range(threads):
+                futures.append(executor.submit(
+                    self.cipher_breaker.prolom_substitute,
+                    self.text,
+                    self.TM_ref,
+                    divided_iterations,
+                    self.cipher_breaker.start_key
+                ))
+
+            results = [future.result() for future in concurrent.futures.as_completed(futures)]
+
+        # Combine results to find the best key and score
+        best_key, best_text, best_score = max(results, key=lambda x: x[2])
+
+        if is_show_plot:
+            self.cipher_breaker.plot_plausibility(self.cipher_breaker.plausibility_scores)
+        return best_key, best_text, best_score
 
     def execute(self, is_show_plot: bool = False) -> tuple[str, str, float]:
         """Execute the Metropolis-Hastings algorithm with the provided parameters.
