@@ -1,7 +1,7 @@
 import numpy as np
 from .cipher_breakers import CipherBreaker
 
-class MetropolisHastingsWrapper:
+class CipherBreakerWrapper:
     """A wrapper class for the MetropolisHastings class that uses the builder pattern
     to set parameters and output results in a structured way.
     """
