@@ -1,8 +1,9 @@
+from abc import ABC, abstractmethod
 import numpy as np
 import matplotlib.pyplot as plt
 
 
-class CipherBreaker:
+class CipherBreaker(ABC):
     def __init__(self, start_key: str = None):
         self.start_key = start_key if start_key else self.generate_random_key()
 
