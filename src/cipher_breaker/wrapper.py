@@ -1,20 +1,16 @@
 import numpy as np
-from .cipher_breakers import MetropolisHastings
+from .cipher_breakers import CipherBreaker
 
 class MetropolisHastingsWrapper:
     """A wrapper class for the MetropolisHastings class that uses the builder pattern
     to set parameters and output results in a structured way.
     """
 
-    def __init__(self):
-        self.start_key = None
+    def __init__(self, cipher_breaker: CipherBreaker):
+        self.cipher_breaker = cipher_breaker
         self.iterations = 1000
         self.text = None
         self.TM_ref = None
-
-    def set_start_key(self, start_key: str):
-        self.start_key = start_key
-        return self
 
     def set_iterations(self, iterations: int):
         self.iterations = iterations
@@ -40,8 +36,7 @@ class MetropolisHastingsWrapper:
         if self.text is None or self.TM_ref is None:
             raise ValueError("Text and transition matrix must be set before execution.")
 
-        mh = MetropolisHastings(start_key=self.start_key)
-        key, text, score = mh.prolom_substitute(self.text, self.TM_ref, self.iterations, self.start_key)
+        key, text, score = self.cipher_breaker.prolom_substitute(self.text, self.TM_ref, self.iterations, self.cipher_breaker.start_key)
         if is_show_plot:
-            mh.plot_plausibility(mh.plausibility_scores)
+            self.cipher_breaker.plot_plausibility(self.cipher_breaker.plausibility_scores)
         return key, text, score
