@@ -2,6 +2,17 @@ import numpy as np
 
 
 class MetropolisHastings:
+    """A class to implement the Metropolis-Hastings algorithm for breaking ciphers.
+
+    This class provides methods to encrypt and decrypt text using a substitution cipher,
+    as well as to analyze the plausibility of decrypted text against a reference transition matrix.
+    It utilizes the Metropolis-Hastings algorithm to iteratively improve the decryption key
+    based on the likelihood of the decrypted text.
+
+    Attributes:
+        alphabet (np.ndarray): An array representing the characters used in the cipher.
+        start_key (str): The initial key for decryption, which can be randomly generated.
+    """
     def __init__(self, start_key: str = None):
         self.alphabet = np.array(list("ABCDEFGHIJKLMNOPQRSTUVWXYZ_"))
         self.start_key = start_key if start_key else self.generate_random_key()
