@@ -13,7 +13,7 @@ test_requirements = [
 
 setup(
     name='cipher_breaker',
-    version='0.1.8',
+    version='0.1.9',
     packages=find_packages(where='src'),
     package_dir={"": "src"},
     include_package_data=True,
