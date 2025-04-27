@@ -14,8 +14,9 @@ test_requirements = [
 setup(
     name='cipher_breaker',
     version='0.1.1',
-    packages=find_packages(),
+    packages=find_packages(where='src'),
     package_dir={"": "src"},
+    include_package_data=True,
     install_requires=requirements,
     tests_require=test_requirements,
     description='Cipher breaker: Metropolis-Hastings algorithm',
