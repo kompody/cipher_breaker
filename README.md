@@ -1,6 +1,6 @@
-# Project Title
+# Cipher Breaker Project
 
-A brief description of your project and what it does.
+This project implements a cipher-breaking tool using the Metropolis-Hastings algorithm. It allows users to decrypt text based on a given key and transition matrix, providing insights into the plausibility of the decrypted results.
 
 ## Table of Contents
 
