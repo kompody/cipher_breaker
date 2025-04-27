@@ -14,9 +14,11 @@ class MetropolisHastings:
         alphabet (np.ndarray): An array representing the characters used in the cipher.
         start_key (str): The initial key for decryption, which can be randomly generated.
     """
+
     def __init__(self, start_key: str = None):
         self.alphabet = np.array(list("ABCDEFGHIJKLMNOPQRSTUVWXYZ_"))
         self.start_key = start_key if start_key else self.generate_random_key()
+        self.plausibility_scores = []
 
     def prolom_substitute(
         self, text: str, TM_ref: np.ndarray, iter: int, start_key: str
@@ -35,7 +37,7 @@ class MetropolisHastings:
         current_key = start_key
         decrypted_current = self.substitute_decrypt(text, current_key)
         p_current = self.plausibility(decrypted_current, TM_ref)
-        plausibility_scores = [p_current]
+        self.plausibility_scores.append(p_current)
 
         for i in range(iter):
             candidate_key = list(current_key)
@@ -55,27 +57,13 @@ class MetropolisHastings:
                 current_key = candidate_key
                 p_current = p_candidate
 
-            plausibility_scores.append(p_current)
+            self.plausibility_scores.append(p_current)
 
             if i % 50 == 0:
                 print(f"Iteration: {i}, log plausibility: {p_current}")
 
         best_decrypted_text = self.substitute_decrypt(text, current_key)
-        self.plot_plausibility(plausibility_scores)
         return current_key, best_decrypted_text, p_current
-
-    def plot_plausibility(self, scores: list):
-        """Plot the plausibility scores over iterations.
-
-        Args:
-            scores (list): A list of plausibility scores to plot.
-        """
-        plt.plot(scores)
-        plt.title("Plausibility Scores Over Iterations")
-        plt.xlabel("Iteration")
-        plt.ylabel("Plausibility Score")
-        plt.grid()
-        plt.show()
 
     def generate_random_key(self) -> str:
         """Generate a random key for the cipher.
@@ -181,3 +169,21 @@ class MetropolisHastings:
             )
         )
         return decrypted_text
+
+    def plot_plausibility(self, scores: list):
+        """Plot the plausibility scores over iterations.
+
+        Args:
+            scores (list): A list of plausibility scores to plot.
+
+        Sample usage:
+        >>> cipher_breaker = MetropolisHastings()
+        >>> cipher_breaker.prolom_substitute(text, TM_ref, iter, start_key)
+        >>> cipher_breaker.plot_plausibility(cipher_breaker.plausibility_scores)
+        """
+        plt.plot(scores)
+        plt.title("Plausibility Scores Over Iterations")
+        plt.xlabel("Iteration")
+        plt.ylabel("Plausibility Score")
+        plt.grid()
+        plt.show()
