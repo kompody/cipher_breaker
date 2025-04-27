@@ -4,8 +4,8 @@ import pandas as pd
 
 
 def krakatit() -> pd.DataFrame:
-    path = os.path.join(os.path.dirname(__file__), "tm_krakatit.csv")
-    return pd.read_csv(path, header=None)
+    file_path = os.path.join(os.path.dirname(__file__), 'tm_refs', "tm_krakatit.csv")
+    return pd.read_csv(file_path, header=None)
 
 
 def save_bigrams(bigrams: pd.DataFrame, path: str):
