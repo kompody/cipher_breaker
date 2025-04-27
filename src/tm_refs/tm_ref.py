@@ -4,7 +4,7 @@ import pandas as pd
 
 
 def krakatit() -> pd.DataFrame:
-    file_path = os.path.join(os.path.dirname(__file__), 'tm_refs', "tm_krakatit.csv")
+    file_path = os.path.join(os.path.dirname(__file__), "tm_krakatit.csv")
     return pd.read_csv(file_path, header=None)
 
 
