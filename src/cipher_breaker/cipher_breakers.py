@@ -25,7 +25,7 @@ class CipherBreaker(ABC):
     def transition_matrix(self, bigrams: np.ndarray) -> np.ndarray:
         pass
 
-    @abstractmethod 
+    @abstractmethod
     def plausibility(self, text: str, TM_ref: np.ndarray) -> float:
         pass
 
@@ -54,4 +54,3 @@ class CipherBreaker(ABC):
         plt.ylabel("Plausibility Score")
         plt.grid()
         plt.show()
-
