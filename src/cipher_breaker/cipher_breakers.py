@@ -6,26 +6,33 @@ class CipherBreaker:
     def __init__(self, start_key: str = None):
         self.start_key = start_key if start_key else self.generate_random_key()
 
+    @abstractmethod
     def generate_random_key(self) -> str:
         pass
 
+    @abstractmethod
     def prolom_substitute(
         self, text: str, TM_ref: np.ndarray, iter: int, start_key: str
     ) -> tuple[str, str, float]:
         pass
 
+    @abstractmethod
     def get_bigrams(self, text: str) -> np.ndarray:
         pass
 
+    @abstractmethod
     def transition_matrix(self, bigrams: np.ndarray) -> np.ndarray:
         pass
 
+    @abstractmethod 
     def plausibility(self, text: str, TM_ref: np.ndarray) -> float:
         pass
 
+    @abstractmethod
     def substitute_encrypt(self, plaintext: str, key: str) -> str:
         pass
 
+    @abstractmethod
     def substitute_decrypt(self, ciphertext: str, key: str) -> str:
         pass
 
