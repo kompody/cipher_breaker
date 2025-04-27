@@ -1,0 +1,9 @@
+__pycache__/*
+.vscode/*
+cipher_breaker.egg-info/*
+text_1000_sample_1_ciphertext.txt
+text_1000_sample_1_key.txt
+text_1000_sample_1_plaintext.txt
+tests/__pycache__/*
+src/cipher_breaker/__pycache__/*
+src/tm_refs/__pycache__/*
