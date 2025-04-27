@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 def krakatit() -> pd.DataFrame:
-    return pd.read_csv("src/tm_refs/tm_krakatit.csv", header=None)
+    return pd.read_csv("./tm_krakatit.csv", header=None)
 
 def save_bigrams(bigrams: pd.DataFrame, path: str):
     pd.DataFrame(bigrams).to_csv(path, header=False, index=False)
