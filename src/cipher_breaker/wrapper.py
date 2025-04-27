@@ -15,6 +15,10 @@ class CipherBreakerWrapper:
     def set_iterations(self, iterations: int):
         self.iterations = iterations
         return self
+    
+    def set_start_key(self, start_key: str):
+        self.cipher_breaker.start_key = start_key
+        return self
 
     def set_text(self, text: str):
         self.text = text
