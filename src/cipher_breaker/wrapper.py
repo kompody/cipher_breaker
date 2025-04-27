@@ -33,6 +33,7 @@ class CipherBreakerWrapper:
         """Execute the Metropolis-Hastings algorithm with the provided parameters.
 
         Args:
+            threads (int): The number of threads to use for parallel execution of the Metropolis-Hastings algorithm.
             is_show_plot (bool): A flag indicating whether to display the plausibility plot.
 
         Returns:
@@ -40,6 +41,9 @@ class CipherBreakerWrapper:
         """
         if self.text is None or self.TM_ref is None:
             raise ValueError("Text and transition matrix must be set before execution.")
+        
+        if threads < 1:
+            raise ValueError("Threads must be greater than 0.")
 
         divided_iterations = self.iterations // threads
         futures = []
