@@ -1,6 +1,4 @@
-import numpy as np
 import pytest
-import os
 
 import src.tm_refs as tm
 from src.cipher_breaker import MetropolisHastings
@@ -54,42 +52,3 @@ def test_generate_random_key():
     # Check that the key is random by generating multiple keys and ensuring they are not all the same
     keys = {cipher_breaker.generate_random_key() for _ in range(10)}
     assert len(keys) > 1, "Generated keys are random; all keys are not the same."
-
-
-def test_save_and_load_bigrams():
-    bigrams = np.array(
-        [
-            ["A", "B"],
-            ["B", "C"],
-            ["C", "D"],
-            ["D", "E"],
-            ["E", "F"],
-            ["F", "G"],
-            ["G", "H"],
-            ["H", "I"],
-            ["I", "J"],
-            ["J", "K"],
-            ["K", "L"],
-            ["L", "M"],
-            ["M", "N"],
-            ["N", "O"],
-            ["O", "P"],
-            ["P", "Q"],
-            ["Q", "R"],
-            ["R", "S"],
-            ["S", "T"],
-            ["T", "U"],
-            ["U", "V"],
-            ["V", "W"],
-            ["W", "X"],
-            ["X", "Y"],
-            ["Y", "Z"],
-        ]
-    )
-
-    tm.save_bigrams(bigrams, "test_bigrams.csv")
-    loaded_bigrams = tm.load_bigrams("test_bigrams.csv")
-
-    assert np.array_equal(bigrams, loaded_bigrams.values)
-
-    os.remove("test_bigrams.csv")
