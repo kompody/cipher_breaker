@@ -29,7 +29,7 @@ class CipherBreakerWrapper:
         self.TM_ref = TM_ref
         return self
 
-    def execute(self, threads: int = 10, is_show_plot: bool = False) -> tuple[str, str, float]:
+    def execute(self, threads: int, is_show_plot: bool = False) -> tuple[str, str, float]:
         """Execute the Metropolis-Hastings algorithm with the provided parameters.
 
         Args:
