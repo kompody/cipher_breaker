@@ -54,8 +54,12 @@ class CipherBreakerWrapper:
         self.TM_ref = TM_ref
         return self
     
-    def save_to_file(self, file_path: str):
-        self.save_file_path = file_path
+    def save_text_to_file(self, file_path: str):
+        self.save_text_path = file_path
+        return self
+    
+    def save_key_to_file(self, file_path: str):
+        self.save_key_path = file_path
         return self
     
     def show_plot(self, flag: bool = False):
@@ -78,12 +82,19 @@ class CipherBreakerWrapper:
             self.text, self.TM_ref, self.iterations, self.cipher_breaker.start_key
         )
 
-        if self.save_file_path:
+        if self.save_text_path:
             try:
-                with open(self.save_file_path, "w", encoding="utf-8") as file:
+                with open(self.save_text_path, "w", encoding="utf-8") as file:
                     file.write(text)
             except FileNotFoundError:
-                raise FileNotFoundError(f"File not found: {self.save_file_path}")
+                raise FileNotFoundError(f"File not found: {self.save_text_path}")
+            
+        if self.save_key_path:
+            try:
+                with open(self.save_key_path, "w", encoding="utf-8") as file:
+                    file.write(key)
+            except FileNotFoundError:
+                raise FileNotFoundError(f"File not found: {self.save_key_path}")
 
         if self.is_show_plot:
             self.cipher_breaker.plot_plausibility(
