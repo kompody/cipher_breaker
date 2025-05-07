@@ -5,6 +5,16 @@ from .cipher_breakers import CipherBreaker
 class CipherBreakerWrapper:
     """A wrapper class for the MetropolisHastings class that uses the builder pattern
     to set parameters and output results in a structured way.
+    
+    Example:
+    cipher_breaker = CipherBreakerWrapper(MetropolisHastings())
+    cipher_breaker.set_text("Hello, world!")
+    cipher_breaker.set_transition_matrix(TM_ref)
+    cipher_breaker.set_iterations(1000)
+    cipher_breaker.set_start_key("ABCDEFGHIJKLMNOPQRSTUVWXYZ_")
+    cipher_breaker.save_to_file("decrypted_text.txt")
+    cipher_breaker.show_plot(True)
+    cipher_breaker.execute()
     """
 
     def __init__(self, cipher_breaker: CipherBreaker):
@@ -26,16 +36,8 @@ class CipherBreakerWrapper:
     def set_text(self, text: str):
         self.text = text
         return self
-
-    def set_transition_matrix(self, TM_ref: np.ndarray):
-        self.TM_ref = TM_ref
-        return self
     
-    def save_text_to_file(self, file_path: str):
-        self.save_file_path = file_path
-        return self
-    
-    def load_text_from_file(self, file_path: str):
+    def set_text_from_file(self, file_path: str):
         try:
             with open(file_path, "r", encoding="utf-8") as file:
                 self.text = file.read()
@@ -43,9 +45,17 @@ class CipherBreakerWrapper:
             raise FileNotFoundError(f"File not found: {file_path}")
         
         return self
+
+    def set_transition_matrix(self, TM_ref: np.ndarray):
+        self.TM_ref = TM_ref
+        return self
     
-    def set_is_show_plot(self, is_show_plot: bool):
-        self.is_show_plot = is_show_plot
+    def save_to_file(self, file_path: str):
+        self.save_file_path = file_path
+        return self
+    
+    def show_plot(self, flag: bool = False):
+        self.is_show_plot = flag
         return self
 
     def execute(self) -> tuple[str, str, float]:

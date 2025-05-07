@@ -42,10 +42,7 @@ class MetropolisHastings(CipherBreaker):
         for i in range(iter):
             candidate_key = list(current_key)
             indices = np.random.choice(len(self.alphabet), 2, replace=False)
-            candidate_key[indices[0]], candidate_key[indices[1]] = (
-                candidate_key[indices[1]],
-                candidate_key[indices[0]],
-            )
+            candidate_key[indices[0]], candidate_key[indices[1]] = candidate_key[indices[1]], candidate_key[indices[0]]
             candidate_key = "".join(candidate_key)
 
             decrypted_candidate = self.substitute_decrypt(text, candidate_key)
@@ -54,8 +51,7 @@ class MetropolisHastings(CipherBreaker):
             q = p_candidate / p_current
 
             if q > 1 or np.random.uniform(0, 1) < 0.01:
-                current_key = candidate_key
-                p_current = p_candidate
+                current_key, p_current = candidate_key, p_candidate
 
             self.plausibility_scores.append(p_current)
 

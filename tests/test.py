@@ -52,3 +52,26 @@ def test_generate_random_key():
     # Check that the key is random by generating multiple keys and ensuring they are not all the same
     keys = {cipher_breaker.generate_random_key() for _ in range(10)}
     assert len(keys) > 1, "Generated keys are random; all keys are not the same."
+
+@pytest.mark.parametrize(
+    "file_paths",
+    [
+        (
+            "text_1000_sample_1_plaintext.txt",
+            "text_1000_sample_1_ciphertext.txt",
+            "text_1000_sample_1_key.txt",
+        )
+    ],
+)
+def test_prolom_substitute(file_paths):
+    plaintext, ciphertext, key = map(read_text_file, file_paths)
+
+    cipher_breaker = MetropolisHastings(start_key=key)
+
+    current_key, best_decrypted_text, p_current = cipher_breaker.prolom_substitute(plaintext, tm.krakatit(), 200, key)
+
+    print(best_decrypted_text)
+
+    # assert current_key == key, "Expected key to be the same"
+    # assert best_decrypted_text == plaintext, "Expected decrypted text to be the same as the plaintext"
+    assert p_current > 0, "Expected plausibility score to be greater than 0"

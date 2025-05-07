@@ -39,15 +39,15 @@ TM_ref = tm.krakatit()
 ### Using wrapper
 
 ```python
-wrapper = CipherBreakerWrapper(cipher_breaker)
-current_key, best_decrypted_text, p_current = (
-  wrapper
-    .set_text(ciphertext)
-    .set_transition_matrix(TM_ref)
-    .set_iterations(20_000)
-    .set_start_key(key)
-    .execute(is_show_plot=True)
-)
+cipher_breaker = CipherBreakerWrapper(MetropolisHastings())
+cipher_breaker.set_text("Hello, world!")
+cipher_breaker.set_transition_matrix(TM_ref)
+cipher_breaker.set_iterations(1000)
+cipher_breaker.set_start_key("ABCDEFGHIJKLMNOPQRSTUVWXYZ_")
+cipher_breaker.save_to_file("decrypted_text.txt")
+cipher_breaker.show_plot(True)
+cipher_breaker.execute()
+current_key, best_decrypted_text, p_current = cipher_breaker.execute()
 
 print(f"Decrypted Key: {current_key}")
 print(f"Decrypted Text: {best_decrypted_text}")
