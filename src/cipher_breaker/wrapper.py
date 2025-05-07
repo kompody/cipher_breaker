@@ -12,6 +12,8 @@ class CipherBreakerWrapper:
         self.iterations = 1000
         self.text = None
         self.TM_ref = None
+        self.save_file_path = None
+        self.is_show_plot = False
 
     def set_iterations(self, iterations: int):
         self.iterations = iterations
@@ -28,8 +30,25 @@ class CipherBreakerWrapper:
     def set_transition_matrix(self, TM_ref: np.ndarray):
         self.TM_ref = TM_ref
         return self
+    
+    def save_text_to_file(self, file_path: str):
+        self.save_file_path = file_path
+        return self
+    
+    def load_text_from_file(self, file_path: str):
+        try:
+            with open(file_path, "r", encoding="utf-8") as file:
+                self.text = file.read()
+        except FileNotFoundError:
+            raise FileNotFoundError(f"File not found: {file_path}")
+        
+        return self
+    
+    def set_is_show_plot(self, is_show_plot: bool):
+        self.is_show_plot = is_show_plot
+        return self
 
-    def execute(self, is_show_plot: bool = False) -> tuple[str, str, float]:
+    def execute(self) -> tuple[str, str, float]:
         """Execute the Metropolis-Hastings algorithm with the provided parameters.
 
         Args:
@@ -45,7 +64,14 @@ class CipherBreakerWrapper:
             self.text, self.TM_ref, self.iterations, self.cipher_breaker.start_key
         )
 
-        if is_show_plot:
+        if self.save_file_path:
+            try:
+                with open(self.save_file_path, "w", encoding="utf-8") as file:
+                    file.write(text)
+            except FileNotFoundError:
+                raise FileNotFoundError(f"File not found: {self.save_file_path}")
+
+        if self.is_show_plot:
             self.cipher_breaker.plot_plausibility(
                 self.cipher_breaker.plausibility_scores
             )
