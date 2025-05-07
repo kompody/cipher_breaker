@@ -32,6 +32,10 @@ class CipherBreakerWrapper:
     def set_start_key(self, start_key: str):
         self.cipher_breaker.start_key = start_key
         return self
+    
+    def generate_new_key(self):
+        self.cipher_breaker.start_key = self.cipher_breaker.generate_random_key()
+        return self
 
     def set_text(self, text: str):
         self.text = text
