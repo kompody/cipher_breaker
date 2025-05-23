@@ -13,7 +13,8 @@ class CipherBreakerWrapper:
     cipher_breaker.set_iterations(1000)
     cipher_breaker.set_start_key("ABCDEFGHIJKLMNOPQRSTUVWXYZ_")
     cipher_breaker.save_to_file("decrypted_text.txt")
-    cipher_breaker.show_plot(True)
+    cipher_breaker.show_result()
+    cipher_breaker.show_plot()
     cipher_breaker.execute()
     """
 
@@ -23,6 +24,7 @@ class CipherBreakerWrapper:
         self.text = None
         self.TM_ref = None
         self.save_file_path = None
+        self.is_show_result = False
         self.is_show_plot = False
 
     def set_iterations(self, iterations: int):
@@ -62,7 +64,11 @@ class CipherBreakerWrapper:
         self.save_key_path = file_path
         return self
     
-    def show_plot(self, flag: bool = False):
+    def show_result(self, flag: bool = True):
+        self.is_show_result = flag
+        return self
+    
+    def show_plot(self, flag: bool = True):
         self.is_show_plot = flag
         return self
 
@@ -95,6 +101,11 @@ class CipherBreakerWrapper:
                     file.write(key)
             except FileNotFoundError:
                 raise FileNotFoundError(f"File not found: {self.save_key_path}")
+            
+        if self.is_show_result:
+            print(f"Decrypted key: {key}")
+            print(f"Decrypted text: {text}")
+            print(f"Plausibility score: {score}")
 
         if self.is_show_plot:
             self.cipher_breaker.plot_plausibility(

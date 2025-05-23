@@ -20,7 +20,7 @@ pip install git+https://github.com/kompody/cipher_breaker.git
 
 ```python
 from cipher_breaker import MetropolisHastings, CipherBreakerWrapper
-import tm_refs as tm
+import   as tm
 
 def read_text_file(file_path):
     with open(file_path, "r", encoding="utf-8") as file:
@@ -32,8 +32,6 @@ ciphertext = read_text_file('text_1000_sample_1_ciphertext.txt')
 key = read_text_file('text_1000_sample_1_key.txt')
 
 cipher_breaker = MetropolisHastings()
-
-TM_ref = tm.krakatit()
 ```
 
 ### Using wrapper
@@ -41,12 +39,12 @@ TM_ref = tm.krakatit()
 ```python
 cipher_breaker = CipherBreakerWrapper(MetropolisHastings())
 cipher_breaker.set_text("Hello, world!")
-cipher_breaker.set_transition_matrix(TM_ref)
+cipher_breaker.set_transition_matrix(tm.krakatit())
 cipher_breaker.set_iterations(1000)
 cipher_breaker.set_start_key("ABCDEFGHIJKLMNOPQRSTUVWXYZ_")
 cipher_breaker.save_to_file("decrypted_text.txt")
-cipher_breaker.show_plot(True)
-cipher_breaker.execute()
+cipher_breaker.show_result()
+cipher_breaker.show_plot()
 current_key, best_decrypted_text, p_current = cipher_breaker.execute()
 
 print(f"Decrypted Key: {current_key}")
