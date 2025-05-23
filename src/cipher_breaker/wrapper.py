@@ -24,6 +24,7 @@ class CipherBreakerWrapper:
         self.text = None
         self.TM_ref = None
         self.save_file_path = None
+        self.save_key_path = None
         self.is_show_result = False
         self.is_show_plot = False
 
