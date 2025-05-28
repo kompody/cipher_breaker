@@ -138,7 +138,7 @@ class MetropolisHastings3D(CipherBreaker):
             np.ndarray: The transition matrix representing the frequency of bigram occurrences.
         """
         n = len(self.alphabet)
-        TM = np.zeros((n, n), dtype=int)
+        TM = np.zeros((n, n, n), dtype=int)
 
         for bigram in bigrams:
             c1, c2, c3 = bigram[0], bigram[1], bigram[2]
