@@ -50,32 +50,30 @@ class MetropolisHastings2D(CipherBreaker):
 
         for i in range(iter):
             candidate_key = self.mutate_key_smart(current_key, decrypted_current, TM_ref)
-
             decrypted_candidate = self.substitute_decrypt(text, candidate_key)
             p_candidate = self.plausibility(decrypted_candidate, TM_ref)
+            self.plausibility_scores.append(p_current)
+
+            T = max(min_temperature, initial_temperature * (cooling_rate ** i))
             
-            if abs(p_candidate - p_current) < 1e-6:
+            if abs(p_candidate - p_current) < 0.01:
                 no_change_counter += 1
             else:
                 no_change_counter = 0
 
             if no_change_counter >= 100:
-                T *= 2 
+                initial_temperature  *= 2 
                 print(f"Iteration {i}: reheating — stagnation detected.")
                 no_change_counter = 0
             
             if p_candidate > best_score:
-                best_score = p_candidate
-                best_key = candidate_key
+                best_score, best_key = p_candidate, candidate_key
 
-            T = max(min_temperature, initial_temperature * (cooling_rate ** i))
             delta = (p_candidate - p_current) / T
             accept_prob = 1 if delta >= 0 else np.exp(delta)
             
             if np.random.uniform(0, 1) < accept_prob:
                 current_key, p_current = candidate_key, p_candidate
-
-            self.plausibility_scores.append(p_current)
 
             if i % 50 == 0:
                 if i % 500 == 0:
