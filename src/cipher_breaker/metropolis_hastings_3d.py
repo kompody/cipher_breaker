@@ -47,7 +47,7 @@ class MetropolisHastings3D(CipherBreaker):
         
         no_change_counter = 0
         last_score = p_current
-        tolerance = 1e-5
+        tolerance = 0.01
 
         for i in range(iter):
             candidate_key = self.mutate_key_smart(current_key, decrypted_current, TM_ref)

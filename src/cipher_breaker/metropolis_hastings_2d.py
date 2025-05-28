@@ -43,11 +43,11 @@ class MetropolisHastings2D(CipherBreaker):
         best_score = p_current
         
         initial_temperature = 5.0
-        cooling_rate = np.exp(np.log(0.01) / 20_000)
+        cooling_rate = np.exp(np.log(0.01) / iter)
         
         no_change_counter = 0
         last_score = p_current
-        tolerance = 1e-5
+        tolerance = 0.01
 
         for i in range(iter):
             candidate_key = self.mutate_key_smart(current_key, decrypted_current, TM_ref)
