@@ -2,7 +2,6 @@ from setuptools import setup, find_packages
 
 requirements = [
     'numpy',
-    'pandas',
     'matplotlib',
 ]
 
@@ -13,7 +12,7 @@ test_requirements = [
 
 setup(
     name='cipher_breaker',
-    version='0.2.2',
+    version='0.2.3',
     packages=find_packages(where='src'),
     package_dir={"": "src"},
     include_package_data=True,
