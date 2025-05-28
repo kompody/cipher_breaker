@@ -44,6 +44,8 @@ class MetropolisHastings3D(CipherBreaker):
         
         initial_temperature = 5.0
         cooling_rate = 0.999
+        
+        no_improvement_counter = 0
 
         for i in range(iter):
             candidate_key = self.mutate_key_smart(current_key, decrypted_current, TM_ref)
@@ -54,6 +56,13 @@ class MetropolisHastings3D(CipherBreaker):
             if p_candidate > best_score:
                 best_score = p_candidate
                 best_key = candidate_key
+                no_improvement_counter = 0
+            else:
+                no_improvement_counter += 1
+                
+            if no_improvement_counter > 100:
+                print(f"No improvement for {no_improvement_counter} iterations. Stopping.")
+                break
 
             T = initial_temperature * (cooling_rate ** i)
             accept_prob = min(1, np.exp((p_candidate - p_current) / T))
