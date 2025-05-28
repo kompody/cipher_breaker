@@ -1,1 +1,3 @@
-include README.md LICENSE src/tm_refs/tm_krakatit.csv
+include README.md LICENSE 
+include src/tm_refs/krakatit.txt
+include src/tm_refs/*.npy
