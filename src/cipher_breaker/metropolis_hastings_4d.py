@@ -44,23 +44,24 @@ class MetropolisHastings4D(CipherBreaker):
         
         initial_temperature = 5.0
         cooling_rate = np.exp(np.log(0.01) / iter)
+        min_temperature = 0.01
         
         for i in range(iter):
             candidate_key = self.mutate_key_smart(current_key, decrypted_current, TM_ref)
-
             decrypted_candidate = self.substitute_decrypt(text, candidate_key)
             p_candidate = self.plausibility(decrypted_candidate, TM_ref)
+            self.plausibility_scores.append(p_current)
             
             if p_candidate > best_score:
                 best_score = p_candidate
                 best_key = candidate_key
-
-            T = initial_temperature * (cooling_rate ** i)
-            accept_prob = min(1, np.exp((p_candidate - p_current) / T))
+            
+            T = max(min_temperature, initial_temperature * (cooling_rate ** i))
+            delta = (p_candidate - p_current) / T
+            accept_prob = 1 if delta >= 0 else np.exp(delta)
+            
             if np.random.uniform(0, 1) < accept_prob:
                 current_key, p_current = candidate_key, p_candidate
-
-            self.plausibility_scores.append(p_current)
 
             if i % 50 == 0:
                 if i % 500 == 0:
