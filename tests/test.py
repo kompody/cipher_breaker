@@ -68,7 +68,7 @@ def test_prolom_substitute(file_paths):
 
     cipher_breaker = MetropolisHastings(start_key=key)
 
-    current_key, best_decrypted_text, p_current = cipher_breaker.prolom_substitute(plaintext, tm.krakatit(), 200, key)
+    current_key, best_decrypted_text, p_current = cipher_breaker.prolom_substitute(plaintext, tm.get_krakatit_2d_tm(), 200, key)
 
     print(best_decrypted_text)
 
