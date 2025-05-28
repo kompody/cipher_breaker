@@ -90,7 +90,6 @@ class CipherBreakerWrapper:
         )
 
         if self.save_text_path:
-            if 
             try:
                 with open(self.save_text_path, "w", encoding="utf-8") as file:
                     file.write(text)
