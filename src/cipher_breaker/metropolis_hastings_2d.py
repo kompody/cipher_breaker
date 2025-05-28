@@ -43,7 +43,7 @@ class MetropolisHastings2D(CipherBreaker):
         best_score = p_current
         
         initial_temperature = 5.0
-        cooling_rate = 0.999
+        cooling_rate = np.exp(np.log(0.01) / 20_000)
 
         for i in range(iter):
             candidate_key = self.mutate_key_smart(current_key, decrypted_current, TM_ref)
@@ -63,10 +63,10 @@ class MetropolisHastings2D(CipherBreaker):
             self.plausibility_scores.append(p_current)
 
             if i % 50 == 0:
-                print(f"Iter: {i}, Plausibility: {p_current}")
-                
-            if i % 500 == 0:
-                print(f"Iter {i} | Temp={T:.3f} | Accept Prob={accept_prob:.3f} | Score={p_current:.2f}")
+                if i % 500 == 0:
+                    print(f"Iter {i} | Score={p_current:.2f} | Temp={T:.3f} | Accept Prob={accept_prob:.3f}")
+                else:
+                    print(f"Iter {i} | Score={p_current:.2f}")
 
         best_decrypted_text = self.substitute_decrypt(text, best_key)
         return best_key, best_decrypted_text, best_score

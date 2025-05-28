@@ -63,10 +63,10 @@ class MetropolisHastings3D(CipherBreaker):
             self.plausibility_scores.append(p_current)
 
             if i % 50 == 0:
-                print(f"Iter: {i}, Plausibility: {p_current}")
-                
-            if i % 500 == 0:
-                print(f"Iter {i} | Temp={T:.3f} | Accept Prob={accept_prob:.3f} | Score={p_current:.2f}")
+                if i % 500 == 0:
+                    print(f"Iter {i} | Score={p_current:.2f} | Temp={T:.3f} | Accept Prob={accept_prob:.3f}")
+                else:
+                    print(f"Iter {i} | Score={p_current:.2f}")
 
         best_decrypted_text = self.substitute_decrypt(text, best_key)
         return best_key, best_decrypted_text, best_score
