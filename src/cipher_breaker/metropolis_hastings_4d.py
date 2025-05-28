@@ -79,30 +79,36 @@ class MetropolisHastings4D(CipherBreaker):
             a, b = np.random.choice(len(self.alphabet), 2, replace=False)
             key[a], key[b] = key[b], key[a]
         else:
-            # "smart" mutation based on bad bigrams
-            bigrams = self.get_bigrams(decrypted_text)
+            # "smart" mutation based on bad 4-grams
+            fourgrams = self.get_bigrams(decrypted_text)
             worst_score = float("inf")
-            worst_bigram = None
+            worst_fourgram = None
 
-            for bg in bigrams:
-                # Ensure both characters are in the alphabet
-                idx0 = np.where(self.alphabet == bg[0])[0]
-                idx1 = np.where(self.alphabet == bg[1])[0]
-                if idx0.size == 0 or idx1.size == 0:
+            for fg in fourgrams:
+                # Ensure all four characters are in the alphabet
+                idx0 = np.where(self.alphabet == fg[0])[0]
+                idx1 = np.where(self.alphabet == fg[1])[0]
+                idx2 = np.where(self.alphabet == fg[2])[0]
+                idx3 = np.where(self.alphabet == fg[3])[0]
+                if idx0.size == 0 or idx1.size == 0 or idx2.size == 0 or idx3.size == 0:
                     continue
                 i = idx0[0]
                 j = idx1[0]
-                score = TM_ref[i, j]
+                k = idx2[0]
+                l = idx3[0]
+                score = TM_ref[i, j, k, l]
                 if score < worst_score:
                     worst_score = score
-                    worst_bigram = (bg[0], bg[1])
+                    worst_fourgram = (fg[0], fg[1], fg[2], fg[3])
 
-            if worst_bigram:
-                idx1 = np.where(np.array(key) == worst_bigram[0])[0]
-                idx2 = np.where(np.array(key) == worst_bigram[1])[0]
-                if idx1.size > 0 and idx2.size > 0:
-                    i1 = idx1[0]
-                    i2 = idx2[0]
+            if worst_fourgram:
+                # Swap two characters from the worst fourgram in the key
+                key_array = np.array(key)
+                idxs = [np.where(key_array == c)[0] for c in worst_fourgram]
+                # Only swap if at least two unique indices found
+                found_idxs = [idx[0] for idx in idxs if idx.size > 0]
+                if len(found_idxs) >= 2:
+                    i1, i2 = found_idxs[0], found_idxs[1]
                     key[i1], key[i2] = key[i2], key[i1]
 
         return "".join(key)

@@ -85,24 +85,26 @@ class MetropolisHastings3D(CipherBreaker):
             worst_bigram = None
 
             for bg in bigrams:
-                # Ensure both characters are in the alphabet
+                # Ensure all three characters are in the alphabet
                 idx0 = np.where(self.alphabet == bg[0])[0]
                 idx1 = np.where(self.alphabet == bg[1])[0]
-                if idx0.size == 0 or idx1.size == 0:
+                idx2 = np.where(self.alphabet == bg[2])[0]
+                if idx0.size == 0 or idx1.size == 0 or idx2.size == 0:
                     continue
                 i = idx0[0]
                 j = idx1[0]
-                score = TM_ref[i, j]
+                k = idx2[0]
+                score = TM_ref[i, j, k]
                 if score < worst_score:
                     worst_score = score
-                    worst_bigram = (bg[0], bg[1])
+                    worst_bigram = (bg[0], bg[1], bg[2])
 
-            if worst_bigram:
-                idx1 = np.where(np.array(key) == worst_bigram[0])[0]
-                idx2 = np.where(np.array(key) == worst_bigram[1])[0]
-                if idx1.size > 0 and idx2.size > 0:
-                    i1 = idx1[0]
-                    i2 = idx2[0]
+            if worst_bigram is not None:
+                key_array = np.array(key)
+                idxs = [np.where(key_array == c)[0] for c in worst_bigram]
+                found_idxs = [idx[0] for idx in idxs if idx.size > 0]
+                if len(found_idxs) >= 2:
+                    i1, i2 = found_idxs[0], found_idxs[1]
                     key[i1], key[i2] = key[i2], key[i1]
 
         return "".join(key)
