@@ -75,30 +75,35 @@ class MetropolisHastings4D(CipherBreaker):
         key = list(key)
 
         if np.random.rand() < 0.5:
-            # простая перестановка
+            # simple permutation
             a, b = np.random.choice(len(self.alphabet), 2, replace=False)
             key[a], key[b] = key[b], key[a]
         else:
-            # "умная" мутация по плохим биграммам
+            # "smart" mutation based on bad bigrams
             bigrams = self.get_bigrams(decrypted_text)
             worst_score = float("inf")
             worst_bigram = None
 
             for bg in bigrams:
-                try:
-                    i = np.where(self.alphabet == bg[0])[0][0]
-                    j = np.where(self.alphabet == bg[1])[0][0]
-                    score = TM_ref[i, j]
-                    if score < worst_score:
-                        worst_score = score
-                        worst_bigram = (bg[0], bg[1])
-                except:
+                # Ensure both characters are in the alphabet
+                idx0 = np.where(self.alphabet == bg[0])[0]
+                idx1 = np.where(self.alphabet == bg[1])[0]
+                if idx0.size == 0 or idx1.size == 0:
                     continue
+                i = idx0[0]
+                j = idx1[0]
+                score = TM_ref[i, j]
+                if score < worst_score:
+                    worst_score = score
+                    worst_bigram = (bg[0], bg[1])
 
             if worst_bigram:
-                i1 = np.where(key == worst_bigram[0])[0][0]
-                i2 = np.where(key == worst_bigram[1])[0][0]
-                key[i1], key[i2] = key[i2], key[i1]
+                idx1 = np.where(np.array(key) == worst_bigram[0])[0]
+                idx2 = np.where(np.array(key) == worst_bigram[1])[0]
+                if idx1.size > 0 and idx2.size > 0:
+                    i1 = idx1[0]
+                    i2 = idx2[0]
+                    key[i1], key[i2] = key[i2], key[i1]
 
         return "".join(key)
 
