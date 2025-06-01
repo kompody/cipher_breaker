@@ -1,8 +1,8 @@
 import numpy as np
-from .cipher_breakers import CipherBreaker
+from cipher_breaker.metropolis_hastings_2d import MetropolisHastings2D
 
 
-class MetropolisHastings4D(CipherBreaker):
+class MetropolisHastings4D(MetropolisHastings2D):
     """A class to implement the Metropolis-Hastings algorithm for breaking ciphers.
 
     This class provides methods to encrypt and decrypt text using a substitution cipher,
@@ -16,62 +16,8 @@ class MetropolisHastings4D(CipherBreaker):
     """
 
     def __init__(self, start_key: str = None):
-        self.alphabet = np.array(list("ABCDEFGHIJKLMNOPQRSTUVWXYZ_"))
-        self.start_key = start_key if start_key else self.generate_random_key()
-        self.plausibility_scores = []
+        super().__init__(start_key)
 
-    def prolom_substitute(
-        self, text: str, TM_ref: np.ndarray, iter: int, start_key: str
-    ) -> tuple[str, str, float]:
-        """Main function for breaking the cipher using the Metropolis-Hastings algorithm.
-
-        Args:
-            text (str): The text to be decrypted.
-            TM_ref (np.ndarray): The transition matrix reference for plausibility calculation.
-            iter (int): The number of iterations to perform.
-            start_key (str): The initial key for decryption.
-
-        Returns:
-            tuple[str, str, float]: A tuple containing the best key found, the decrypted text, and the plausibility score.
-        """
-        current_key = start_key
-        decrypted_current = self.substitute_decrypt(text, current_key)
-        p_current = self.plausibility(decrypted_current, TM_ref)
-        self.plausibility_scores.append(p_current)
-        
-        best_key = current_key
-        best_score = p_current
-        
-        initial_temperature = 5.0
-        cooling_rate = np.exp(np.log(0.01) / iter)
-        min_temperature = 0.01
-        
-        for i in range(iter):
-            candidate_key = self.mutate_key_smart(current_key, decrypted_current, TM_ref)
-            decrypted_candidate = self.substitute_decrypt(text, candidate_key)
-            p_candidate = self.plausibility(decrypted_candidate, TM_ref)
-            self.plausibility_scores.append(p_current)
-            
-            if p_candidate > best_score:
-                best_score = p_candidate
-                best_key = candidate_key
-            
-            T = max(min_temperature, initial_temperature * (cooling_rate ** i))
-            delta = (p_candidate - p_current) / T
-            accept_prob = 1 if delta >= 0 else np.exp(delta)
-            
-            if np.random.uniform(0, 1) < accept_prob:
-                current_key, p_current = candidate_key, p_candidate
-
-            if i % 50 == 0:
-                if i % 500 == 0:
-                    print(f"Iter {i} | Score={p_current:.2f} | Temp={T:.3f} | Accept Prob={accept_prob:.3f}")
-                else:
-                    print(f"Iter {i} | Score={p_current:.2f}")
-
-        best_decrypted_text = self.substitute_decrypt(text, best_key)
-        return best_key, best_decrypted_text, best_score
-    
     def mutate_key_smart(self, key: str, decrypted_text: str, TM_ref: np.ndarray) -> str:
         key = list(key)
 
@@ -114,16 +60,6 @@ class MetropolisHastings4D(CipherBreaker):
 
         return "".join(key)
 
-    def generate_random_key(self) -> str:
-        """Generate a random key for the cipher.
-
-        Returns:
-            str: A randomly generated key for the cipher.
-        """
-        return "".join(
-            np.random.choice(self.alphabet, size=len(self.alphabet), replace=False)
-        )
-
     def get_bigrams(self, text: str) -> np.ndarray:
         """Function to get bigrams from the text.
 
@@ -158,65 +94,3 @@ class MetropolisHastings4D(CipherBreaker):
         # Replace zeros with 1 to prevent log(0)
         TM[TM == 0] = 1
         return TM
-
-    def plausibility(self, text: str, TM_ref: np.ndarray) -> float:
-        """Calculate the plausibility of the text relative to the reference transition matrix.
-
-        Args:
-            text (str): The input text for which to calculate plausibility.
-            TM_ref (np.ndarray): The reference transition matrix for comparison.
-
-        Returns:
-            float: The calculated plausibility of the text.
-        """
-        bigrams_obs = self.get_bigrams(text)
-        TM_obs = self.transition_matrix(bigrams_obs)
-        likelihood = np.sum(np.log(TM_ref) * TM_obs)
-
-        return likelihood
-
-    def substitute_encrypt(self, plaintext: str, key: str) -> str:
-        """Encrypt the text using the key.
-
-        Args:
-            plaintext (str): The text to be encrypted.
-            key (str): The key used for encryption.
-
-        Returns:
-            str: The encrypted text.
-        """
-        key_array = np.array(list(key))
-        encrypted_text = "".join(
-            map(
-                lambda char: (
-                    key_array[np.where(self.alphabet == char)[0][0]]
-                    if char in self.alphabet
-                    else char
-                ),
-                plaintext,
-            )
-        )
-        return encrypted_text
-
-    def substitute_decrypt(self, ciphertext: str, key: str) -> str:
-        """Decrypt the text using the key.
-
-        Args:
-            ciphertext (str): The text to be decrypted.
-            key (str): The key used for decryption.
-
-        Returns:
-            str: The decrypted text.
-        """
-        key_array = np.array(list(key))
-        decrypted_text = "".join(
-            map(
-                lambda char: (
-                    self.alphabet[np.where(key_array == char)[0][0]]
-                    if char in key_array
-                    else char
-                ),
-                ciphertext,
-            )
-        )
-        return decrypted_text
