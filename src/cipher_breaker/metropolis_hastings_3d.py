@@ -3,12 +3,12 @@ from cipher_breaker.metropolis_hastings_2d import MetropolisHastings2D
 
 
 class MetropolisHastings3D(MetropolisHastings2D):
-    """A class to implement the Metropolis-Hastings algorithm for breaking ciphers.
+    """A class to implement the Metropolis-Hastings algorithm for breaking ciphers in a three-dimensional context.
 
-    This class provides methods to encrypt and decrypt text using a substitution cipher,
-    as well as to analyze the plausibility of decrypted text against a reference transition matrix.
-    It utilizes the Metropolis-Hastings algorithm to iteratively improve the decryption key
-    based on the likelihood of the decrypted text.
+    This class extends the capabilities of the Metropolis-Hastings algorithm to handle three-dimensional transition matrices,
+    allowing for more complex analysis of decrypted text. It provides methods to encrypt and decrypt text using a substitution cipher,
+    and evaluates the plausibility of the decrypted text against a reference transition matrix specific to three-dimensional data.
+    The algorithm iteratively refines the decryption key based on the likelihood of the decrypted text, enhancing the accuracy of the decryption process.
 
     Attributes:
         alphabet (np.ndarray): An array representing the characters used in the cipher.

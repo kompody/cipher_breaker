@@ -20,7 +20,7 @@ pip install git+https://github.com/kompody/cipher_breaker.git
 
 ```python
 from cipher_breaker import MetropolisHastings, CipherBreakerWrapper
-import   as tm
+import tm_ref as tm
 
 def read_text_file(file_path):
     with open(file_path, "r", encoding="utf-8") as file:
@@ -39,7 +39,7 @@ cipher_breaker = MetropolisHastings()
 ```python
 cipher_breaker = CipherBreakerWrapper(MetropolisHastings())
 cipher_breaker.set_text("Hello, world!")
-cipher_breaker.set_transition_matrix(tm.krakatit())
+cipher_breaker.set_transition_matrix(tm.get_krakatit_2d_tm())
 cipher_breaker.set_iterations(1000)
 cipher_breaker.set_start_key("ABCDEFGHIJKLMNOPQRSTUVWXYZ_")
 cipher_breaker.save_to_file("decrypted_text.txt")
@@ -55,7 +55,7 @@ print(f"Plausibility Score: {p_current}")
 ### Without wrapper
 
 ```python
-current_key, best_decrypted_text, p_current = cipher_breaker.prolom_substitute(ciphertext, TM_ref, 20_000, cipher_breaker.start_key)
+current_key, best_decrypted_text, p_current = cipher_breaker.prolom_substitute(ciphertext, tm.get_krakatit_2d_tm(), 20_000, cipher_breaker.start_key)
 
 cipher_breaker.plot_plausibility(cipher_breaker.plausibility_scores)
 
